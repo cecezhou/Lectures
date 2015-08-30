@@ -1,0 +1,47 @@
+\documentclass{article}
+
+\usepackage{../common}
+
+% \def\ScribeStr{??}
+\def\LecStr{Alexander Rush}
+\def\LecNum{1}
+\def\LecTitle{Mathematical Notation in Lecture Notes}
+\def\LecDate{}
+\begin{document}
+
+\MakeScribeTop{}
+
+
+Throughout the lecture notes for CS182, we will use a standard set of
+mathematical notation described in this note.  Sometimes this will
+differ slightly from the notation in the textbook \textit{Artificial
+  Intelligence} (herein AIMA3e). When there is a significant
+difference we will try to note why and explain the choice.
+
+\begin{itemize}
+\item Brackets are used to indicate explicit sets and script-case indicates variables with a set type, e.g. \[\mcX = \{1,4, 5\}, \]
+When convenient, we will use set constructor notation to build new sets:
+\[\mcY = \{ x \in \mcX : x > 1\} = \{4, 5\}.  \] 
+
+The notation $x \in \mcX$ indicates that $x$ is a member of $\mcX$. For this example $1 \in \mcX$ but $2 \not \in \mcX$.   
+
+\item Following AIMA3e, named functions are in small-caps $\msc{Function}$ or have short common names $f, g, h$.   All functions will be given explicit types:
+  \[\msc{Function} : \mcA \mapsto \mcB.\]
+  This indicates that the domain is from $\mcA$ and the range is $\mcB$.
+
+\item The notation $\mcX \times \mcY$ is the Cartesian product of two sets: 
+  \[\mcX \times \mcY = \{(1,4), (1,5), (4, 4), (4, 5), (5, 4), (5, 5)\}.  \] 
+  This will most often be used to indicate a function that takes two
+  (or more) arguments, in this case the first would be from $\mcX$ the second
+  from $\mcY$.
+
+\item We use the notation $2^\mcX$ to indicate the powerset of a set, e.g. if $\mcX= \{1,4, 5\}$ then 
+\[2^\mcX = \{\{\}, \{1\}, \{1,4\}, \{1, 5\}, \{4, 5\}, \{1,4,5\}\}.\]
+
+This will most often be used to indicate that a function returns a subset of $\mcX$.  
+
+\item 
+
+
+\end{itemize}
+\end{document}
