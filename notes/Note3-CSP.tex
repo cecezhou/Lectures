@@ -54,7 +54,7 @@ a valid coloring relationship using set notation:
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.8\linewidth]{CambridgeSomerville_1852_web}
+  \includegraphics[width=0.8\linewidth]{pics/CambridgeSomerville_1852_web}
   \label{fig:camb}
   \caption{Cambridge-area circa 1852. Best viewed in color.}
 \end{figure}
@@ -273,13 +273,12 @@ give a good tagging of the sentence.
   Give some explicit constraints that might be used in this model.  
 \end{exercise}
 
-\censor{
 
   \begin{itemize}
   \item The word 'is' most always be a verb.
   \item The Adj/Noun
   \end{itemize}
-}
+
 
 
 
@@ -486,7 +485,7 @@ assignments of a given state. In particular in the homework you will explore a f
 \end{exercise}
 
 \begin{center}
-  \includegraphics[width=5cm]{sudoku}
+  \includegraphics[width=5cm]{pics/sudoku}
 \end{center}
 
 \begin{exercise}
@@ -558,7 +557,7 @@ The neighbors and sample function can also in theory incorporate knowledge of th
 For instance, in the homework we will return to the Sudoku
 problem. For this problem our function $\msc{Sample}$ will sample from
 assignments where all of the row factors are satisfied (but with
-possibly inconsistent columns and boxes). The $\Neighbors$ function 
+possibly inconsistent columns and boxes). The $\msc{Neighbors}$ function 
 will consider all possible ways are flipping to elements of a row.
 Since this operation keeps the rows consistent, local search spends 
 much less time exploring inconsistent assignments. 
@@ -568,7 +567,6 @@ much less time exploring inconsistent assignments.
 \ifthenelse{\isundefined{\StudentVersion}}{
 \censor{}
 
-}
 }{
 \censor{}
 \vspace{5cm}
@@ -691,7 +689,7 @@ This approach is similar to \textbf{genetic algorithms} another popular local se
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=10cm]{genetic_algorithms}
+  \includegraphics[width=10cm]{pics/genetic_algorithms}
   \caption{Subtext: Just make sure you don't have it maximize instead of minimize.}
 \end{figure}
 
@@ -703,7 +701,7 @@ To do the former, it randomly accepts some neighbors that increase $f$ based on 
 
 \begin{figure}
   \centering
-  \includegraphics{plot3d}
+  \includegraphics{pics/plot3d}
   \label{fig:siman}
   \caption{Graph with local minima and maxima.}
 \end{figure}
@@ -728,7 +726,7 @@ To do the former, it randomly accepts some neighbors that increase $f$ based on 
 
 \begin{figure}
   \centering
-  \includegraphics[width=\textwidth]{genetic}
+  \includegraphics[width=\textwidth]{pics/genetic}
   \caption{Genetic algorithm car racing  (http://gencar.co/). Watch out, you can spend hours watching this. }
 \end{figure}
 
