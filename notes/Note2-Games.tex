@@ -26,7 +26,7 @@ However there are still many open challenges in adversarial search and game play
 
  
 \begin{center}
-  \includegraphics[height=13cm]{game_ais}
+  \includegraphics[height=13cm]{pics/game_ais}
 \end{center}
 
 \noindent In this lecture we will use examples from Tic-Tac-Toe, later in the term we will talk about Jeopardy and StarCraft. Backgammon is also a particularly interesting example that we'll discuss briefly. If you're interested MIT has run a great IAP tournaments in the past focusing on Poker and StarCraft. There used to be a substantial reward for solving Go. However, Seven Minutes in Heaven is beyond the scope of this course.
@@ -185,7 +185,7 @@ Note though that for these problems we are only considering a branching factor o
 AIMA has a nice graphic showing a partial  expansion of a game tree for tic-tac-toe from scratch. 
 
 \begin{center}
-  \includegraphics{tictactoe}
+  \includegraphics{pics/tictactoe}
 \end{center}
 
 \section{Search for Game Playing}
@@ -360,12 +360,12 @@ Generally game playing heuristics estimate how good a position is for each playe
 Perhaps the simplest heuristic is the value system taught to beginners learning to play chess. This system simply assigns value to the \textbf{material remaining} on the board. 
 \air
 
-\centerline{\includegraphics[width=8cm]{chessvalues1}}
+\centerline{\includegraphics[width=8cm]{pics/chessvalues1}}
 \air
 
 However, note that because this is just an approximation and ignores so much of the other complications of chess, there have been many, many other heuristics for this problem. (Wikipedia is amazing.) I am not a chess player, but it is pretty remarkable to me that not even the relative values of bishop and knight are consistent.
 
-\centerline{ \includegraphics[width=16cm]{chess_value}}
+\centerline{ \includegraphics[width=16cm]{pics/chess_value}}
 \vspace{1cm}
 
 Another method that is used is brute force calculation of certain positions. In chess this often means utilizing an end-game solver to play out the results of a large set of standard positions (such as a kings and pawns ending) . Given that each extra depth is a multiplicative cost, having an endgame database can turn a failed search into a successful one.
