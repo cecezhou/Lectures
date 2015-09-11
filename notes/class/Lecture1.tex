@@ -1,4 +1,4 @@
-\documentclass[11pt]{article}
+\documentclass[10pt]{article}
 % \def\StudentVersion{}
 \usepackage{../common}
 \makeatletter
@@ -32,115 +32,111 @@
 \begin{document}
 \MakeScribeTop{}
 
-\tableofcontents
+\section{Summary Board}
+
+\begin{itemize}
+\item Search Model
+\item Paths and Costs
+\item Example 1
+\item Example 2
+\item Review: Containers
+\item Search Algorithms
+\end{itemize}
 
 \section{Introduction}
 
-A core component of reasoning is making choices in constrained worlds,
-and in particular deciding on the best action to make based on current
-information. In AI, we \textbf{model} these scenarios by creating abstract worlds 
-and formally defining the possible actions that may occur. These worlds
-allow us to explore various \textbf{algorithms} for selecting actions 
-in these environments. The two components mutually inform each other. 
-The model provides the framework over which the algorithm functions;
-and the availability of algorithms informs our construction of the model 
-itself. 
+The structure of the lectures:
 
-Search will be our core focus for the first several lectures and a
-central tool for the first half of this course, and it exemplifies
-this split. We will begin by defining an abstract representation of
-our world, utilizing states and actions, and defining explicit
-goal. Once we have transformed our problem into this form, we can
-treat search as a blackbox set of algorithms for answering queries
-about this world. Even better if we can provide further information
-about the structure of the problem we will be able to improve these
-algorithms by providing heuristics.  Search will also be an important
-general tool for the next three topics: game-playing, constraint
-satisfaction, and logical inference.
+\begin{itemize}
+\item Models
+\item Algorithms
+\end{itemize}
 
-\section{A Running Example}
+Future Topics of search: 
 
-Our running example for search will be path-finding over a graph. This
-algorithm is central to many consumer applications, such as Google
-Maps, as well as commercial routing systems.\footnote{If you have
-  taken CS 124, this setup will look very familiar, although the
-  notation and vocabulary for AI is slightly different.} In the path
-finding problem, we assume that we start at a position (in this case
-A) and have to reach a goal (in this case C) by traversing the edges
-in the graph, each of which have an associated length. The best path 
-will be the shortest one to the goal. 
+\begin{itemize}
+\item Pure Search, Game-Playing, Constraint Satisfaction, Logical Inference
+\end{itemize}
 
-This represents one instance of a search problem, but we will see 
-many others throughout the class. We start by defining the general 
-representation we will use for each of these problems. 
+Note on Notation
 
+\begin{itemize}
+\item Please stop me this class for notational questions...
+\end{itemize}
 
+\section{Board 1}
+
+\begin{itemize}
+\item MapQuest, google/apple maps
+\item Commercial routing
+\end{itemize}
 
 \begin{figure}[h]
   \centering
   \begin{tikzpicture}
     \Graph
   \end{tikzpicture}
-  \caption{A small path-finding problem on a graph.}
   \label{fig:minigraph}
 \end{figure}
 
 
-\section{A Model for Search}
 
-We use the term \textbf{model} informally to mean an abstract representation of the world. 
-Practically this can be thought of like an interface for which we act on the world. In doing
-so we filter specific details from the underlying problem, but keep the necessary structure. 
-
-\subsection{Search Model}
-
-We define the search model using 6 elements. Throughout course we will
-repeatedly return to this model for many other problems:
-
+\section{Board 2}
  \air
+\textbf{Search Model}
 \begin{center}
 \begin{tabularx}{\linewidth}{llX}
   \toprule
   Name (AIMA) & Type & Description \\
   \midrule
 \\
- State space & $\mcS$ & The set of all possible states of the world. \\\\
- Action space & $\mcA$& The set of all possible actions of the world. \\\\
- Action model&  $\msc{Actions}: \mcS \mapsto 2^\mcA$ & Specifies which actions are applicable at a given state. \\\\
- Transition model&  $\msc{Result}:  \mcS \times \mcA \mapsto \mcS $ &  Specifies the new state resulting from taking an action at a state.  \\\\
- Initial state &  $s_0 \in \mcS$ & The starting state of the world.  \\\\
- Goal test& $\msc{Goal}: \mcS \rightarrow \{0, 1\}$ & Predicate indicating if a state is a goal. \\\\
+ State space & $\mcS$ & Set of states of world. \\\\
+ Action space & $\mcA$& Set of actions in world. \\\\
+ Action model&  $\msc{Act}: \mcS \mapsto 2^\mcA$ & Actions applicable at a state \\\\
+ Transition model&  $\msc{Res}:  \mcS \times \mcA \mapsto \mcS $ &   Result of taking action at state (stop an explain).  \\\\
+ Initial state &  $s_0 \in \mcS$ & Starting State of world.  \\\\
+ Goal test& $\msc{Goal}: \mcS \rightarrow \{0, 1\}$ & Is state a goal? \\\\
  \bottomrule
 \end{tabularx}
 \end{center}
+(Stop and make clear the function notation)
 
 \air
 
-\noindent How do we use this model? Well, we start from state $s_0$, at this state we are allowed to take 
-any action $a \in \msc{Actions}(s)$, doing so changes the state to $s_1 \gets \msc{Result}(s, a)$. 
-We proceed until we reach a state with $\msc{Goal}(s) = 1$. We refer to this sequence as a path, formally:
+\begin{itemize}
+\item  Start: $s_0$,
+\item Take any action $a \in \msc{Act}(s_0)$
+\item New state $s_1 \gets \msc{Res}(s_0, a)$
+\item Proceed until we reach $\msc{Goal}(s) = 1$
+\end{itemize}
 
+\section{Board 3}
 
-
+\textbf{Paths and Costs}
 \begin{defn}
    A \textbf{path}
-consists of a sequence of state-action pairs beginning from the initial state $s_0$, i.e.:  \[p = (s_0, a_0), (s_1, a_1), \ldots, (s_{n-1}, a_{n-1}).\] 
-\noindent Where $s_i = \msc{Result}(s_{i-1}, a_{i-1})$ and the depth of the path to be $n$. We define the last state of the path to be  
- \[p_{\mathrm{last}} \triangleq \msc{Actions}(s_{n-1}, a_{n-1}).\] 
-Define the set of all paths as $\mcP$.
+is a sequence of state-action pairs starting at $s_0$:  \[p = (s_0, a_0), (s_1, a_1), \ldots, (s_{n-1}, a_{n-1}).\] 
+\noindent Where $s_i = \msc{Res}(s_{i-1}, a_{i-1})$ for all i and $n$ is the depth. 
+Let the set of all paths as $\mcP$.
+
+Let the last state of the path to be  
+ \[p_{\mathrm{last}} \triangleq \msc{Act}(s_{n-1}, a_{n-1}).\] 
 
 \end{defn}
 
 \begin{defn}
-  A path is said to be a \textbf{solution} if it reaches a goal state, that is if $\msc{Goal}(p_{\msc{last}}) = 1$.
+  A \textbf{solution} is a path that reaches a goal state, that is if $\msc{Goal}(p_{\msc{last}}) = 1$.
+
+
   Define the set of solutions as: 
   \[\mcQ = \{p \in \mcP:  \msc{Goal}(p_{\msc{last}}) = 1 \} \]
 \end{defn}
 
+(Stop and make clear the set notation)
 
-\subsection{Search with Costs}
+\section{Board 4}
 
-We will often want to extend the search definition to include \textbf{costs} associated with each state-action pair. 
+Costs: example length of the graph
 
 \air
 
@@ -148,50 +144,44 @@ We will often want to extend the search definition to include \textbf{costs} ass
 \begin{tabularx}{\linewidth}{llX}
   \toprule
   \\
- Step cost & $c:\mcS \times \mcA \mapsto \reals_+$ & Gives the positive cost of taking an action at a state. \\\\
- Path cost & $g:\mcP  \mapsto \reals_+$ & Gives the cost of a path, i.e. $g(p) = c(s_0, a_0) +
-c(s_1, a_1) + \ldots + c(s_{n-1}, a_{n-1})$. \\\\
+ Step cost & $c:\mcS \times \mcA \mapsto \reals_+$ & Cost of action at state. \\\\
+ Path cost & $g:\mcP  \mapsto \reals_+$ & Cost of a path, i.e. $g(p) = \sum_{i=0}^{n-1}  c(s_i, a_i)$. \\\\
 \bottomrule
 \end{tabularx}
 \end{center}
 
-\noindent Generally we hope to find the lowest cost, or optimal, solution. Define an \textbf{optimal solution} as:
+Goal: Find the \textbf{optimal solution} or lowest-cost path:
 
 \[ p^* = \argmin_{p \in \mcQ} g(p) \] 
 
-\noindent where $\mcQ$ is the set of all solution paths. We define $C^* = g(p^*)$ as the cost of the optimal solution. 
-
-\subsection{Example: Back to Path Finding}
-
-Consider the graph problem in Figure~\ref{fig:minigraph}. We assume
-that our goal is to get from state A to the goal state C. Here's how
-this problem looks in terms of the search formalism.
-
-\begin{exercise}
-  What is the search model for path finding problem?
-\end{exercise}
+\noindent where $\mcQ$ is the solution set. 
 
 
+\section{Board 5}
+
+(Pull back down example board)
+
+\textbf{Example 1}
 \begin{center}
 \begin{tabularx}{\linewidth}{llX}
   \toprule
   Name & Value & Description \\
   \midrule
 \\
- State space & \censor{$\mcS = \{\mathrm{A, B, C, D, E}\}$} & \censor{Each location in the graph.} \\\\
- Action space & \censor{$\mcA = \{ \mathrm{\textsc{Go}(A)}, \mathrm{\textsc{Go}(B)}, \mathrm{\textsc{Go}(C)},\ldots $}& \censor{All traversals of the edges of the graph.} \\\\
- Actions&  \censor{$\msc{Actions}$} & \censor{Identifies which transitions are possible. For instance, $\msc{Actions}(\mathrm{A}) =\{\mathrm{\textsc{Go}(B), \textsc{Go}(D), \textsc{Go}(E)}\}$ corresponding to the neighbors of A.} \\\\
- Transition model&  \censor{$\msc{Result} $} &  \censor{Moves the state to the next location. For instance, $\msc{Result}\mathrm{(A, \textsc{Go}(E))} = \mathrm{E}$}    \\\\
+ State space & \censor{$\mcS = \{\mathrm{A, B, C, D, E}\}$} & \censor{Locations} \\\\
+ Action space & \censor{$\mcA = \{ \mathrm{\textsc{Go}(A)}, \mathrm{\textsc{Go}(B)}, \mathrm{\textsc{Go}(C)},\ldots $}& \censor{Move along edge.} \\\\
+ Actions&  \censor{$\msc{Act}$} & \censor{Which are possible. For instance, $\msc{Act}(\mathrm{A}) =\{\mathrm{\textsc{Go}(B), \textsc{Go}(D), \textsc{Go}(E)}\}$.} \\\\
+ Transition model&  \censor{$\msc{Res} $} &  \censor{Moves to new location. For instance, $\msc{Res}\mathrm{(A, \textsc{Go}(E))} = \mathrm{E}$}    \\\\
  Initial state &  \censor{$s_0 = \mathrm{A}$} & \censor{The initial state A.}  \\\\
  Goal test& \censor{$\msc{Goal}(s)$} & \censor{Gives 1 if state $s$ is C, 0 otherwise.} \\\\
- Step cost & \censor{$c$} & \censor{The cost of taking an action. For instance $c(\mathrm{A, \textsc{Go}(E)}) = 5$, the distance between the two nodes.} \\\\
+ Step cost & \censor{$c$} & \censor{For instance $c(\mathrm{A, \textsc{Go}(E)}) = 5$, distances.} \\\\
  \bottomrule
 \end{tabularx}
 \end{center}
 \air
 
 
-\subsection{Properties of a Search Problem}
+\section{Board 6}
 
 A search problem has several associated properties that will help us quantify the difficulty of finding a solution or the optimal solution. 
 
@@ -199,29 +189,28 @@ A search problem has several associated properties that will help us quantify th
 \begin{center}
 \begin{tabularx}{\linewidth}{llX}
   \toprule
-  Name (AIMA) & Type & Description \\
+  Name & Symbol & Desc \\
   \midrule
 \\
- Branching Factor & $b$ & The maximum number of actions from any state.  \\\\
- Min Depth &  $d$ & The solution with the smallest depth (number of actions).
+ Branching Factor & $b$ & Max actions at a state.  \\\\
+ Min Depth &  $d$ & Shallowest solution depth.
  \\\\
- Max Depth & $m$& The solution with the largest depth (number of actions). \\\\
- Optimal Cost & $C^*$& The path cost of the optimal solution. \\\\
+ Max Depth & $m$& Deepest solution depth. \\\\
+ Optimal Cost & $C^*$& Cost of the optimal solution $g(p^*)$. \\\\
  \bottomrule
 \end{tabularx}
 \end{center}
 
-Note that the solution with min-depth may not be optimal (if all costs
-are not 1).  Also for many problems we will not know the true optimal
-cost, $d$ or $m$, or even $b$. 
+\begin{itemize}
+\item Min Depth Solution may *not* be optimal
+\item We may not know any of these properties exactly.
+\end{itemize}
 
-
-
+\section{Board 7}
 \begin{exercise}
   What are the search properties $b, d, m, C^*$ for the path finding
   problem? Shallowest goal? Deepest goal? Branching factor?
 \end{exercise}
-
 
 \air
 \begin{center}
@@ -239,9 +228,15 @@ cost, $d$ or $m$, or even $b$.
 \end{center}
 
 
-\subsection{Example 2: Machine Translation}
+\subsection{Board 8}
+\textbf{Example 2}
 
-Path-finding over graphs is one of the key uses of search, but it is by no means the only one. A major benefit of the search abstraction is that it can be used as a common language for many problems in AI. 
+\begin{itemize}
+\item And now for something very different.
+\end{itemize}
+
+(Pause, read story about machine translation)
+
 
 Consider for example, a very different problem: finding the best translation of a Spanish sentence into English. The following figure shows an example of this problem. 
 
@@ -256,11 +251,19 @@ Consider for example, a very different problem: finding the best translation of 
     \path[draw, ->] (dict-1-5) -> (dict-4-4);
   \end{tikzpicture}
   \label{fig:mt}
-  \caption{Example Spanish-English translation problem and the expected English output}
 \end{figure}
 
-For this problem we use the following (informal) abstraction:
+Where do the scores come from?
+\begin{itemize}
+\item Translation Dictionary: Cost of translating each Spanish word. i.e. golpeo => slapped : 1, golpeo => hit : 2, golpeo: slaps: 20
 
+\item Language Model: Cost of two English words being next to each other. i.e. ``the => witch'': 1, "witch => the'': 5, ``the => the'': 100
+\end{itemize}
+
+
+\subsection{Board 9}
+
+Ask people.
 
 \air 
 \begin{center}
@@ -269,80 +272,19 @@ For this problem we use the following (informal) abstraction:
   Name & Value & Description \\
   \midrule
 \\
- State space & $\mcS$ & Which words have been translated and the current English translation. \\\\
- Action space & $\mcA$& Translate a word . \\\\
- Actions&  $\msc{Actions}$ & All possible ways to translate any untranslated word. \\\\
- Transition model&  $\msc{Result} $ &  Add a new word to the English translation and remove the translated word from the source.    \\\\
+
+ State space & $\mcS$ & The English translation AND which words have been translated. \\\\
  Initial state &  $s_0$ & Translation is blank, all words are untranslated.  \\\\
+ Action space & $\mcA$& Translate a word . \\\\
+ Actions&  $\msc{Act}$ & All ways to translate any unused word. \\\\
+ Transition model&  $\msc{Res} $ &  Add word to translation and remove word from source.    \\\\
  Goal test& $\msc{Goal}(s)$ & Any state with all words translated. \\\\
- Step cost & $c$ &  How good a translation is this action? How good is the translated output?  \\\\
+ Step cost & $c$ &  Sum of translation and language model. \\
  \bottomrule
 \end{tabularx}
 \end{center}
 
-Figure~\ref{fig:mtstates} shows example states from the machine translation search world.
-
-
-\begin{figure}[h]
-  \centering
-  \subfloat[]{
-  \begin{tikzpicture}
-    \matrix(dict)[matrix of nodes, ampersand replacement=\&]{
-      Mary \& golpeo \& la \& bruja \& verde \\
-      ~\\
-      ~\\
-      Mary \& slapped \& the  \\ };
-    \path[draw, ->] (dict-1-1) -> (dict-4-1);
-    \path[draw, ->] (dict-1-2) -> (dict-4-2);
-    \path[draw, ->] (dict-1-3) -> (dict-4-3);
-  \end{tikzpicture}
-  }
-  \subfloat[]{
-  \begin{tikzpicture}
-    \matrix(dict)[matrix of nodes, ampersand replacement=\&]{
-      Mary \& golpeo \& la \& bruja \& verde \\
-      ~\\
-      ~\\
-      the \& green \& Mary  \\ };
-    \path[draw, ->] (dict-1-3) -> (dict-4-1);
-    \path[draw, ->] (dict-1-5) -> (dict-4-2.north);
-    \path[draw, ->] (dict-1-1) -> (dict-4-3.north);
-  \end{tikzpicture}
-  }
-  ~
-
-  \subfloat[]{
-  \begin{tikzpicture}
-
-    \matrix(dict)[matrix of nodes, ampersand replacement=\&]{
-      Mary \& golpeo \& la \& bruja \& verde \\
-      ~\\
-      ~\\
-      Mary \& hit \& the  \\ };
-    \path[draw, ->] (dict-1-1) -> (dict-4-1);
-    \path[draw, ->] (dict-1-2) -> (dict-4-2);
-    \path[draw, ->] (dict-1-3) -> (dict-4-3);
-  \end{tikzpicture}
-  }
-  \subfloat[]{
-  \begin{tikzpicture}
-    \matrix(dict)[matrix of nodes, ampersand replacement=\&]{
-      Mary \& golpeo \& la \& bruja \& verde \\
-      ~\\
-      ~\\
-      the \& green \& Mary \& hit \& witch \\ };
-    \path[draw, ->] (dict-1-3) -> (dict-4-1);
-    \path[draw, ->] (dict-1-5) -> (dict-4-2.north);
-    \path[draw, ->] (dict-1-1) -> (dict-4-3.north);
-    \path[draw, ->] (dict-1-2) -> (dict-4-4.north);
-    \path[draw, ->] (dict-1-4) -> (dict-4-5.north);
-  \end{tikzpicture}
-  }
-  
-  \caption{Four different states of the translation search problem. (a) is partially correct, (b) has the wrong order, (c) makes an incorrect translation, (d) is a non-optimal solution.}
-  \label{fig:mtstates}
-\end{figure}
-
+\subsection{Board 10}
 
 \begin{exercise}
   What are the search properties $b, d, m$ for the machine translation
@@ -365,37 +307,30 @@ Figure~\ref{fig:mtstates} shows example states from the machine translation sear
 \end{center}
 
 
-\section{Search Algorithms}
+\section{Talk}
+
+\textbf{Search Algorithms}
+
+(Riff on algorithms versus models)
 
 % \section{Graph Search}
 
-Once we have described our problem using the search model, we can
-apply a search algorithm to find a solution. We will consider 
-two types of search algorithms, uninformed and informed. Both 
-make use of the same algorithmic skeleton which we discuss in this section.
 
+\subsection{Board 12}
 
-A search algorithm explores the set of paths $\mcP$ based only on the
-abstract problem structure. At each stage the algorithm has subset of
-available paths, called the \textbf{frontier}. The algorithm will expand this
-frontier to find new paths until a goal state is expanded. However, we
-will see that the ordering of this process greatly affects which
-solutions are found and how long it takes to find them.
+\textbf{Abstract Containers}
 
+\begin{itemize}
+\item \texttt{push}, 
+\item \texttt{pop},
+\item \texttt{empty}
+\end{itemize}
 
-\subsection{Review: Abstract Containers}
+Abstract: many possible implementations
 
-Just a quick review. We will define a container as an abstract data
-structure with three operations: \texttt{push}, \texttt{pop},
-\texttt{empty}. Informally push adds an object to the container, pop
-removes and returns an object, and empty tells us if there are any
-objects remaining. We say it is \textbf{abstract} because we do not
-specify the order elements are popped or the internal representation.
+(Maybe implement)
 
-One container we will look at is called a stack. Briefly here is how it looks 
-in Python. It implements \texttt{push} by adding an element to the back of a list,
-and pop by removing and returning the last element. Because of this behavior it 
-is called a Last-in First-out (LIFO) container.  
+*  Last-in First-out (LIFO) container.  
 
 \begin{lstlisting}
 class Stack:
@@ -406,7 +341,9 @@ class Stack:
 \end{lstlisting}
 
 
-\subsection{The Algorithms}
+\section{Board 13}
+
+\textbf{The Core Algorithm}
 
 All search algorithms utilize the following algorithm:
 
@@ -415,33 +352,29 @@ All search algorithms utilize the following algorithm:
 \begin{algorithmic}[1]
   \Procedure{TreeSearch}{frontier}
   \State{frontier.push(Path($s_0, \epsilon$))}
+  \State{}
   \While{frontier is not empty}
   \State{$p \gets$  frontier.pop() }
   \State{$s \gets p_{\mathrm{last}}$}
   \If{$\msc{Goal}(s)$}
   \Return{$p$}
   \EndIf{}
-  \For{$a \in \msc{Actions}(s)$}
-  \State{$s' \gets \msc{Result}(s, a)$}
+  \State{}
+  \For{$a \in \msc{Act}(s)$}
+  \State{$s' \gets \msc{Res}(s, a)$}
+
+  \State{}
   \State{frontier.push($p$ extended by $(s,a)$)}
+  \State{}
   \EndFor{}
   \EndWhile{}
   \EndProcedure{}
 \end{algorithmic}
 \end{algorithm}
 
-The algorithm start with $s_0$ in the frontier. At each stage it expands one path
-from the frontier and pushes it children onto the frontier. It ends when a goal 
-state is found.
+\section{Board 14}
 
-Crucially we are using \textbf{frontier} as an abstract container. By
-changing the definition of push and pop of this container we will get
-different ordering strategies. This leads to very different search algorithms.
-
-Note that for search on problems like path finding, the search algorithm 
-may end up having paths that wrap around to previous states. We can 
-prevent this by adding some memory to prevent the algorithm
-from looping. This modification leads to an algorithm called graph search:
+(Show example of wraparound)
 
 \begin{algorithm}
 \begin{algorithmic}[1]
@@ -455,8 +388,8 @@ from looping. This modification leads to an algorithm called graph search:
   \Return{$p$}
   \EndIf{}
   \State{\censor{explored $\gets \{s\} \cup$ explored}}
-  \For{$a \in \msc{Actions}(s)$}
-  \State{$s' \gets \msc{Result}(s, a)$}
+  \For{$a \in \msc{Act}(s)$}
+  \State{$s' \gets \msc{Res}(s, a)$}
   \If{\censor{$s \not \in$ explored }}
   frontier.push($p$ extended by $(s,a)$)
   \EndIf{}
@@ -466,13 +399,15 @@ from looping. This modification leads to an algorithm called graph search:
 \end{algorithmic}
 \end{algorithm}
 
-\textsc{GraphSearch} will be neccesary for some search
-problems. However, remembering previous states can lead to a larger
-cost in terms of memory, so \textsc{TreeSearch} is also used.
+% \textsc{GraphSearch} will be neccesary for some search
+% problems. However, remembering previous states can lead to a larger
+% cost in terms of memory, so \textsc{TreeSearch} is also used.
 
-We can make properties of the search algorithms, like memory, more
-explicit. For every search algorithm we discuss, we will consider the
-following four properties.
+% We can make properties of the search algorithms, like memory, more
+% explicit. For every search algorithm we discuss, we will consider the
+% following four properties.
+
+\section{Board 15}
 
 % A search algorithm takes an arbitrary search specification and returns a solution path. However search algorithms differ with respect to several inherent properties. Which search algorithm you select depends on these.
 
@@ -483,15 +418,23 @@ following four properties.
 \item Space Complexity; What is the worst-case memory usage of the algorithm?
 \end{itemize}
 
+\section{Board 16}
 
-\section{Uninformed Search}
+\textbf{Uninformed Search}
 
-Uninformed search algorithm assume that we are given only the search
-model and no further information.  We will consider four variants of
-uninformed search: breadth-first search, depth-first search,
-depth-limited search, and uniform-cost search.  Each corresponds to a
-different instantiation of the frontier data structure and leads to very 
-different search algorithms.
+\begin{itemize}
+\item Breadth-First Search
+\item Depth-First Search
+\item Depth-Limited Search
+\item Iterative-Deepening Search
+\item Uniform-Cost Search
+\end{itemize}
+% Uninformed search algorithm assume that we are given only the search
+% model and no further information.  We will consider four variants of
+% uninformed search: breadth-first search, depth-first search,
+% depth-limited search, and uniform-cost search.  Each corresponds to a
+% different instantiation of the frontier data structure and leads to very 
+% different search algorithms.
 
 % Now consider using this algorithm in practice. We are assuming 
 % we know nothing else about the structure of the problem, just 
@@ -499,18 +442,22 @@ different search algorithms.
 
 % The major question is whether we want to be optimistic and continue on the current path, or whether we want to be careful and check all directions equally. 
 
+\section{Board 17}
+
 \subsection{Breadth-First Search}
 
-Breadth-first search (BFS) is the most cautious search algorithm. It
-fully explores each layer of states before moving on to any deeper
-states.  Breadth-first search does this by defining the frontier as a
-first-in first-out (FIFO) queue.  This means that paths added to the
-queue will wait until every other path is expanded before they are
-expanded.
+\begin{itemize}
+\item Conservative-algorithm
+\item Explores each depth layer completely.  
+\item LIFO Queue
+\end{itemize}
 
-Let's consider running BFS on the graph in Figure~\ref{fig:minigraph}, which 
-will lead to discovering the goal path shown in Figure~\ref{fig:bfs}. The following 
-is the process of the algorithm at each iteration. 
+- Push: adds to back 
+
+- Pop: removes from front
+
+
+\section{Board 18}
 
 \begin{center}
 \begin{tabular}{cccll}
@@ -527,6 +474,8 @@ is the process of the algorithm at each iteration.
   \bottomrule
 \end{tabular}
 \end{center}
+
+
 
 
 
@@ -566,34 +515,51 @@ is the process of the algorithm at each iteration.
   \caption{Paths returned by running three different search algorithms.}
 \end{figure}
 
+\section{Board 19}
 
-BFS explores every path of each depth in order. How many paths are
+
+
+Properties of Breadth-First search
+
+(BFS explores every path of each depth in order. How many paths are
 there up to depth $l$? Well in the worst-case there are $O(b^l)$. If
 the shallowest goal node is at depth $d$, BFS will search $O(b^d)$
-states. 
-
-In terms of the properties of the algorithm, this means: 
-
+states. )
 
 \begin{itemize}
-\item Completeness: Yes. Finds a solution after $O(b^l)$ steps.
-\item Optimality: No. Optimal solution may be deeper than $d$. However BFS is optimal when costs are all 1.
+\item Completeness: Yes. Finds solution after $O(b^l)$ steps.
+\item Optimality: No. Optimal solution may not be at depth $d$. 
+However BFS optimal when costs are all 1.
 \item Time-Complexity: $O(b^d)$
 \item Space-Complexity: $O(b^d)$ (size of frontier at depth $d$).
 \end{itemize}
 
+\section{Board 20}
+
 \subsection{Depth-First Search}
 
-Depth-first search (DFS) takes the opposite tack. Whenever possible,
-it explores a deeper path than in last iteration. This results in a
-greedy approach that is always hoping to find a goal quickly. DFS
-utilizes a last-in first-out (LIFO) stack for the frontier.  The next path expanded
-always comes from the last path that had available actions. This leads
-to exploring deeper and deeper paths.
+\begin{itemize}
+\item Greedy algorithm
+\item Explores further depth each time
+\item FIFO Queue
+\end{itemize}
 
-Consider again the graph in Figure~\ref{fig:minigraph}. Running DFS will lead to the 
-path in Figure~\ref{fig:dfs}. As with BFS here is the run of the algorithm:
+- Push: adds to front
 
+- Pop: removes from front
+
+% Depth-first search (DFS) takes the opposite tack. Whenever possible,
+% it explores a deeper path than in last iteration. This results in a
+% greedy approach that is always hoping to find a goal quickly. DFS
+% utilizes a last-in first-out (LIFO) stack for the frontier.  The next path expanded
+% always comes from the last path that had available actions. This leads
+% to exploring deeper and deeper paths.
+
+% Consider again the graph in Figure~\ref{fig:minigraph}. Running DFS will lead to the 
+% path in Figure~\ref{fig:dfs}. As with BFS here is the run of the algorithm:
+
+
+\section{Board 21}
 \begin{center}
 \begin{tabular}{cccll}
   \toprule
@@ -621,6 +587,15 @@ path in Figure~\ref{fig:dfs}. As with BFS here is the run of the algorithm:
 %   \label{fig:minigraph}
 % \end{figure}
 
+\section{Board 22}
+
+\begin{itemize}
+\item Completeness: No.
+\item Optimality: No.
+\item Time-Complexity: $O(b^m)$ 
+\item Space-Complexity: $O(b^m)$ for graph search but only $O(bm)$ for tree search.
+\end{itemize}
+
 \noindent 
 
 \noindent 
@@ -632,12 +607,6 @@ example that it is non-optimal.
 
 In terms of the properties of the algorithm, this means: 
 
-\begin{itemize}
-\item Completeness: No.
-\item Optimality: No.
-\item Time-Complexity: $O(b^m)$ 
-\item Space-Complexity: $O(b^m)$ for graph search but only $O(bm)$ for tree search.
-\end{itemize}
 
 XKCD puts these issues into perspective.
 
@@ -900,9 +869,9 @@ Now let us consider using A$^*$ with a heuristic $h$ satisfying the following pr
 
 \begin{defn}
   A  \textbf{consistent} heuristic obeys the property that for any state $s$, \[h(s) \leq c(s, a)
-  + h(\msc{Result}(s, a))\]
+  + h(\msc{Res}(s, a))\]
  for all
-  actions $a \in \msc{Actions}(s, a)$.
+  actions $a \in \msc{Act}(s, a)$.
 \end{defn}
 
 Consistency is a stronger condition and implies admissibility. However, there are cases where just admissibility is sufficient so we define both.
@@ -979,9 +948,9 @@ Together this gives a contradiction:
 
 Now let's return to the heuristics we discussed above. How can we check whether they satisfy the properties necessary for A$^*$ search? First consider straight-line distance. We would like to show that for any state $s$ and valid action $a$:
 
-\[h(s) \leq c(s, a) + h(\msc{Result}(s, a))\]
+\[h(s) \leq c(s, a) + h(\msc{Res}(s, a))\]
 
-\noindent and let's call the resulting state $s' = \msc{Result}(s, a)$.
+\noindent and let's call the resulting state $s' = \msc{Res}(s, a)$.
 
 We have defined our problem such that the cost of the action is the distance between $s$ and $s'$, i.e. $d(s, s')$. And we have defined our heuristic $h(s)$ as the distance to our goal $h(s) = d(s, \mathrm{C})$. So for consistency we need to show that: 
 
