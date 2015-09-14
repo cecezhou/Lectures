@@ -125,7 +125,7 @@ We proceed until we reach a state with $\msc{Goal}(s) = 1$. We refer to this seq
 \begin{defn}
    A \textbf{path}
 consists of a sequence of state-action pairs beginning from the initial state $s_0$, i.e.:  \[p = (s_0, a_0), (s_1, a_1), \ldots, (s_{n-1}, a_{n-1}).\] 
-\noindent Where $s_i = \msc{Result}(s_{i-1}, a_{i-1})$ and the depth of the path to be $n$. We define the last state of the path to be  
+\noindent Where $s_i = \msc{Result}(s_{i-1}, a_{i-1})$ and the depth of the path to be $n+1$. We define the last state of the path to be  
  \[p_{\mathrm{last}} \triangleq \msc{Actions}(s_{n-1}, a_{n-1}).\] 
 Define the set of all paths as $\mcP$.
 
