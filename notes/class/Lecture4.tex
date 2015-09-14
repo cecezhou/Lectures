@@ -18,6 +18,23 @@
 
 \tableofcontents
 
+\section{Board 0}
+
+Show starcraft
+
+https://www.youtube.com/watch?v=LjSXj4cb_Yo
+
+\section{Board 1}
+
+\begin{center}
+  \includegraphics[height=13cm]{pics/game_ais}
+\end{center}
+
+\section{Board 2}
+
+
+Show XKCD
+
 \section{Introduction}
 
 Game playing is one of the earliest pursuits of AI researchers. John McCarthy's students were already working on chess in 1959. Research into Chess culminated in 1997 when IBM's Deep Blue beat Gary Kasparov, becoming the first computer program to defeat the reining grand champion. Today you can download programs that are world-class at Chess even on standard hardware. 
@@ -48,8 +65,8 @@ Game playing (GP) differs from search in that we will assume there are two game 
 \\
  State space & $\mcS$ & All possible states of the game, e.g. unique board positions \\\\
  Action space & $\mcA$& All possible actions of the game i.e. moves\\\\
- Actions&  $\msc{Actions}: \mcS \mapsto 2^\mcA$ & Actions are applicable at a given state, i.e. available moves. \\\\
- Transition model&  $\msc{Result}:  \mcS \times \mcA \mapsto \mcS $ &  Update the state after a move.  \\\\
+ Actions&  $\msc{Act}: \mcS \mapsto 2^\mcA$ & Actions are applicable at a given state, i.e. available moves. \\\\
+ Transition model&  $\msc{Res}:  \mcS \times \mcA \mapsto \mcS $ &  Update the state after a move.  \\\\
  Initial state &  $S_0 \in \mcS$ & The starting state of the game.  \\\\
  \midrule \\
  Player& $\msc{Player}: \mcS \rightarrow \{\mathrm{Min}, \mathrm{Max}\}$ & Function indicating the current turn. \\\\
@@ -67,8 +84,8 @@ Generally we do this by assuming that the opponent will behave rationally as wel
 
 \[ \msc{Minimax}(s) = \begin{cases} 
   \censorm{\msc{Utility}(s)} & \mathrm{if\ } \msc{Terminal}(s)  \\
-  \censorm{\max_{a \in \msc{Actions}(s)}  \msc{Minimax}(\msc{Result}(s, a))} & \mathrm{if\ } \msc{Player(s)} = \mathrm{Max}  \\
-  \censorm{\min_{a \in \msc{Actions}(s) } \msc{Minimax}(\msc{Result}(s, a))} & \mathrm{if\ } \msc{Player(s)} = \mathrm{Min} \end{cases}\] 
+  \censorm{\max_{a \in \msc{Act}(s)}  \msc{Minimax}(\msc{Res}(s, a))} & \mathrm{if\ } \msc{Player(s)} = \mathrm{Max}  \\
+  \censorm{\min_{a \in \msc{Act}(s) } \msc{Minimax}(\msc{Res}(s, a))} & \mathrm{if\ } \msc{Player(s)} = \mathrm{Min} \end{cases}\] 
 
 We can expand this function into a data-structure known as a \textbf{game tree}. Each node in this tree represents a move by Max or Min. The triangles pointing up indicate that the node is maximizing over its children, and triangles pointing down indicate that the node is minimizing over its children.
 
@@ -107,7 +124,7 @@ Let's now consider one of the simplest zero-sum, perfect-information games, Tic-
   Name & Type & Description \\
   \midrule
 \\
- Actions&  \censor{$\msc{Actions}(s)= \{$ OTop, OTopRight$\}$} & \censor{There are currently two actions available to play.} \\\\
+ Actions&  \censor{$\msc{Act}(s)= \{$ OTop, OTopRight$\}$} & \censor{There are currently two actions available to play.} \\\\
  Player& \censor{$\msc{Player}(s) = \mathrm{Min}$} & \censor{We will assume that O is minimizing utility and it is her  turn to play.} \\\\
  Terminal test& \censor{$\msc{Terminal}(s) = 0 $} & \censor{This is not a terminal state. We have yet to win or draw} \\\\
  Utility & \censor{$\msc{Utility}$} & \censor{The utility function at a terminal state will be 1 for X, -1 for O, 0 for a draw.} \\\\
@@ -119,8 +136,8 @@ Next we can ask what is the utility that the Min player should assign to this st
 
 
 \begin{eqnarray*} 
-  \msc{Minimax}(s) = \min \{&& \max \{ \msc{Utility}(\msc{Result}( \msc{Result}(s, \mathrm{OTop})), \mathrm{XTopRight}) \}, \\
- & & \max \{ \msc{Utility}(\msc{Result}( \msc{Result}(s, \mathrm{OTopRight})), \mathrm{XTop}) \} \} 
+  \msc{Minimax}(s) = \min \{&& \max \{ \msc{Utility}(\msc{Res}( \msc{Res}(s, \mathrm{OTop})), \mathrm{XTopRight}) \}, \\
+ & & \max \{ \msc{Utility}(\msc{Res}( \msc{Res}(s, \mathrm{OTopRight})), \mathrm{XTop}) \} \} 
 \end{eqnarray*}
 
 \noindent Since either way O plays, it leads to an X win, this utility of this state is $1$. 
@@ -215,13 +232,13 @@ Note also that instead of explicitly using a stack, we can implement DFS using r
   \Return{$\msc{Utility}(s)$}
   \ElsIf{$\msc{Player}(s) = \mathrm{Max}$}
   \State{$v \gets \censorm{-\infty}$}
-  \For{$a \in \msc{Actions}(s)$}
-  \State{\censor{$v \gets \max\{v, \msc{Minimax}(\msc{Result}(s, a))\}$}}
+  \For{$a \in \msc{Act}(s)$}
+  \State{\censor{$v \gets \max\{v, \msc{Minimax}(\msc{Res}(s, a))\}$}}
   \EndFor{}
   \ElsIf{$\msc{Player}(s) = \mathrm{Min}$}
   \State{$v \gets \censorm{\infty}$}
-  \For{$a \in \msc{Actions}(s)$}
-  \State{\censor{$v \gets \min\{v, \msc{Minimax}(\msc{Result}(s, a))\}$}}
+  \For{$a \in \msc{Act}(s)$}
+  \State{\censor{$v \gets \min\{v, \msc{Minimax}(\msc{Res}(s, a))\}$}}
   \EndFor{}
   \EndIf{}
   \State{\Return{$v$}}
@@ -312,8 +329,8 @@ The upside of this method is that it yields a significant speed-up in practice w
   \Return{$\msc{Utility}(s)$}
   \ElsIf{$\msc{Player}(s) = $ Max}
   \State{$v \gets $\censor{}}
-  \For{$a \in \msc{Actions}(s)$}
-  \State{$v \gets$ \censorm{$\max\{v, \msc{AlphaBetaMinimax}(\msc{Result}(s, a), \alpha, \beta)\}$}}
+  \For{$a \in \msc{Act}(s)$}
+  \State{$v \gets$ \censorm{$\max\{v, \msc{AlphaBetaMinimax}(\msc{Res}(s, a), \alpha, \beta)\}$}}
   \If{$v \geq \beta$}
   \Return{$v$}
   \EndIf{}
@@ -321,8 +338,8 @@ The upside of this method is that it yields a significant speed-up in practice w
   \EndFor{}
   \ElsIf{$\msc{Player}(s) = $Min}
   \State{$v \gets $\censor{}}
-  \For{$a \in \msc{Actions}(s)$}
-  \State{$v \gets$ \censorm{$\min\{v, \msc{AlphaBetaMinimax}(\msc{Result}(s, a), \alpha, \beta)\}$}}
+  \For{$a \in \msc{Act}(s)$}
+  \State{$v \gets$ \censorm{$\min\{v, \msc{AlphaBetaMinimax}(\msc{Res}(s, a), \alpha, \beta)\}$}}
   
   \If{\censorm{$v \leq \alpha$}}
   \Return{$v$}
@@ -348,8 +365,8 @@ In practice game playing systems use either a depth-limited search approach or a
 \[ \msc{H-Minimax}(s, d) = \begin{cases} 
   \msc{Utility}(s) & \mathrm{if\ } \msc{Terminal}(s)  \\
   h(s) & \mathrm{if\ } d > \mathrm{limit}   \\
-  \max_{a \in \msc{Actions}(s) } \msc{H-Minimax}(\msc{Result}(s, a), d+1) & \mathrm{if\ } \msc{Player(s)} = \mathrm{Max}  \\
-  \min_{a \in \msc{Actions}(s) } \msc{H-Minimax}(\msc{Result}(s, a), d+1) & \mathrm{if\ } \msc{Player(s)} = \mathrm{Min} \end{cases}\] 
+  \max_{a \in \msc{Act}(s) } \msc{H-Minimax}(\msc{Res}(s, a), d+1) & \mathrm{if\ } \msc{Player(s)} = \mathrm{Max}  \\
+  \min_{a \in \msc{Act}(s) } \msc{H-Minimax}(\msc{Res}(s, a), d+1) & \mathrm{if\ } \msc{Player(s)} = \mathrm{Min} \end{cases}\] 
 
 However, unlike in the standard search setup, GP only receives a score when it reaches a terminal state. To handle depth limited cases, we need a function $h: \mcS \mapsto \reals$ to award a heuristic utility to the state. As with general search, coming up with good game-specific heuristics is a very challenging problem but crucial to the construction of effective and practical GP agents.  
 
@@ -403,15 +420,15 @@ In the case of the utility of a state, this gives us a method for computing the 
 
 % consider the case of a game with randomness. We model randomness as a third player Exp. Assume that at random states there is a probability distribution $p(a | s)$ of selecting an action $a$. Define expectation of 
 
-\[ \mathbb{E}_{a|s}[\msc{Utility}(\msc{Result}(s, a))]= \sum_{a \in \msc{Actions}(s) } p(a | s) \msc{Utility}(\msc{Result}(s, a))  \]  
+\[ \mathbb{E}_{a|s}[\msc{Utility}(\msc{Res}(s, a))]= \sum_{a \in \msc{Act}(s) } p(a | s) \msc{Utility}(\msc{Res}(s, a))  \]  
 
 This formula can then be directly plugged into minimax, to yield an algorithm known as expectimax
 
 \[ \msc{E-Minimax}(s) = \begin{cases} 
   \censorm{\msc{Utility}(s)} & \mathrm{if\ } \msc{Terminal}(s)  \\
-  \censorm{\max_{a \in \msc{Actions}(s) } \msc{E-Minimax}(\msc{Result}(s, a))} & \mathrm{if\ } \msc{Player(s)} = \mathrm{Max}  \\
-  \censorm{\min_{a \in \msc{Actions}(s) } \msc{E-Minimax}(\msc{Result}(s, a))} & \mathrm{if\ } \msc{Player(s)} = \mathrm{Min} \\ 
-  \censorm{\sum_{a \in \msc{Actions}(s) } p(a | s) \msc{E-Minimax}(\msc{Result}(s, a))} & \mathrm{if\ } \msc{Player(s)} = \mathrm{Exp} \end{cases}\] 
+  \censorm{\max_{a \in \msc{Act}(s) } \msc{E-Minimax}(\msc{Res}(s, a))} & \mathrm{if\ } \msc{Player(s)} = \mathrm{Max}  \\
+  \censorm{\min_{a \in \msc{Act}(s) } \msc{E-Minimax}(\msc{Res}(s, a))} & \mathrm{if\ } \msc{Player(s)} = \mathrm{Min} \\ 
+  \censorm{\sum_{a \in \msc{Act}(s) } p(a | s) \msc{E-Minimax}(\msc{Res}(s, a))} & \mathrm{if\ } \msc{Player(s)} = \mathrm{Exp} \end{cases}\] 
 
 
 \end{document}
