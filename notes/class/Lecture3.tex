@@ -40,8 +40,18 @@
 
 \section{Board 0}
 
-Start with XKCD
+\begin{itemize}
+\item Homework extension Monday at midnight (HW questions)
+\item Section Lyman 425
+\item Laptop policy
+\item name tags...
+\end{itemize}
 
+\section{board 0.5}
+\begin{itemize}
+\item mistake $n$ depth $n+1$
+\item Depth $m$ 
+\end{itemize}
 
 \section{Board 1}
 \begin{itemize}
@@ -213,7 +223,7 @@ Heuristic: Guess at future cost.
 \end{itemize}
 
 Same setup as UCS but with 
- \[f(p) = h(p_s) \]  
+ \[f(p) = h(p_{\mathrm{Last}}) \]  
 
 
 \section{Board 12} 
@@ -229,7 +239,7 @@ Same setup as UCS but with
 
 - Combine UCS and Greedy Best-first
 
-\[f(p) \triangleq g(p) + h(p_s) \]  
+\[f(p) \triangleq g(p) + h(p_{\mathrm{Last}}) \]  
 
 - A* search. 
 
@@ -258,23 +268,34 @@ Same setup as UCS but with
 % \item Space-Complexity: $O(b^m)$ 
 \end{itemize}
 
+\section{Board 14.5}
+Let $p$ be $(s_0, a_0), \ldots, (s_{n-1}, a_{n-1})$
+  
+Define a (strict) subpath of $p \in \mcP$ as $(s_0, a_0), \ldots, (s_{n'-1}, a_{n'-1})$
+for $n' \leq n$.
+
+By our definition of cost $g(p') \leq g(p)$.
+
+
 \section{Board 15}
 
 \begin{defn}
   An \textbf{admissible} heuristic never overestimates the cost to a goal state, i.e.  \[g(p) +
-  h(p_s) \leq g(\hat{p})\] where $\hat{p}\in \mcQ$ is any solution path with 
-  $p$ as a partial path.
+  h(p_{\mathrm{Last}}) \leq g(\hat{p})\] where $\hat{p}\in \mcQ$ is any solution with 
+  $p$ as a sub-path.
 \end{defn}
 
 \begin{defn}
   A  \textbf{consistent} heuristic obeys the property that for any state $s$, \[h(s) \leq c(s, a)
   + h(\msc{Res}(s, a))\]
  for all
-  actions $a \in \msc{Act}(s, a)$.
+  actions $a \in \msc{Act}(s)$.
 \end{defn}
 
-Consistency is a stronger condition and implies admissibility. However, there are cases where just admissibility is sufficient so we define both.
+Consistency $\Rightarrow$ admissibility. However, there are cases where just admissibility is sufficient so we define both.
 
+
+% We first prove that the A$^*$ estimated cost increase at each expansion, and then use this to show that the first expansion of any state is optimal. This implies that the first time we expand a goal state is optimal.  
 
 \section{Board 16}
 
@@ -284,32 +305,41 @@ Consistency is a stronger condition and implies admissibility. However, there ar
 
 \noindent \textbf{Proof:}
 
-We first prove that the A$^*$ estimated cost increase at each expansion, and then use this to show that the first expansion of any state is optimal. This implies that the first time we expand a goal state is optimal.  
 
--The values of expanded paths are non-decreasing.
+\textbf{The values of expanded paths are non-decreasing.}
 
-Assume we have expanded a path $p$ to a path $p'$ with action $a$, we have:
+Assume expansion of path $p$ leads to $p'$ with action $a$:
 
 \begin{eqnarray*}
-f(p') &=& g(p') + h(p_s') = g(p) + c(p_s, a) + h(p'_s)  \\
-&\geq & g(p) + h(p_s) =f(p),
+f(p') &=& g(p') + h(p_{\mathrm{Last}}') = g(p) + c(p_{\mathrm{last}}, a) + h(p'_{\mathrm{last}})  \\
+&\geq & g(p) + h(p_{\mathrm{Last}}) =f(p),
 \end{eqnarray*}
 
 \noindent Where we have directly used the definition of consistency for the inequality.
 
 \section{Board 17}
 
-- Whenever $A^*$ expands a path, the optimal path to that node has already been found. 
+\textbf{ After $A^*$ expands a path, the optimal path to that state has already been expanded. }
 
-We will prove this by contradiction. 
+By contradiction.
 
-Say we have expand path $p$ before the optimal path to this state $q$. This means that $p_{\mathrm{last}} =q_\mathrm{last}$ and  $g(q) < g(p)$, this implies $f(q) < f(p)$.
+Assume we have expand path $p \in \mcP$ before the optimal path to this state $q \in \mcP$. 
 
-Since we expanded $p$ first, this also mean there is some partial path
-of $q$ called $q'$ in the frontier that currently has $f(p) \leq f(q')$ (or else it
-would have been expanded first).
+\air 
+Implies $p_{\mathrm{last}} =q_\mathrm{last}$ and  $g(q) < g(p)$, this implies $f(q) < f(p)$.
+\air
 
-However by Property~(1) we know that as a partial path of $q$, $f(q') \leq f(q)$. 
+Since we expanded $p$ first, this also mean there is some sub-path
+of $q$ (called $q'$) in frontier.
+\air
+
+
+ Also we know that $f(p) \leq f(q')$ (or else it would have been expanded first).
+
+\air
+
+However by Property~(1) we know that as a sub-path of $q$, $f(q') \leq f(q)$. 
+\air 
 
 Together this gives a contradiction:
 
@@ -329,7 +359,7 @@ Together this gives a contradiction:
 
 \section{Board 18}
 \begin{itemize}
-\item Completeness: Yes.  
+\item Completeness: Yes.  (graph-search requires both, tree-search just need admissable)
 \item Optimality: Yes. 
 \item Time-Complexity: $O(b^\Delta)$ (depends on the absolute error of $h$, see AIMA3e, p.98)
 \item Memory-Complexity: $O(b^\Delta)$ (graph search)
@@ -364,7 +394,7 @@ We have defined our problem such that the cost of the action is the distance bet
 
 \subsection{Comparing Heuristic Functions}
 
-\[\Delta(p, s) = g(\hat{p}^*) - (g(p) + h(p_s)) \] 
+\[\Delta(p, s) = g(\hat{p}^*) - (g(p) + h(p_{\mathrm{Last}})) \] 
 
 \begin{defn}
   Given two consistent heuristics $h$ and $h'$, we say $h$ \textbf{dominates} $h'$ if 
