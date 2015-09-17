@@ -24,37 +24,53 @@ Show starcraft
 
 \url{https://www.youtube.com/watch?v=LjSXj4cb_Yo}
 
+
+\section{Board 0.5}
+
+Heuristic examples:
+
+
 \section{Board 1}
 
 \begin{center}
   \includegraphics[height=13cm]{../pics/game_ais}
 \end{center}
 
+
+
 \section{Board 2}
 
 
 Show XKCD
-
-\section{Introduction}
-
-Game playing is one of the earliest pursuits of AI researchers. John McCarthy's students were already working on chess in 1959. Research into Chess culminated in 1997 when IBM's Deep Blue beat Gary Kasparov, becoming the first computer program to defeat the reining grand champion. Today you can download programs that are world-class at Chess even on standard hardware. 
-
-However there are still many open challenges in adversarial search and game playing. XKCD is keeping score:
-
- 
-\begin{center}
-  \includegraphics[height=13cm]{../pics/game_ais}
-\end{center}
-
 \noindent In this lecture we will use examples from Tic-Tac-Toe, later in the term we will talk about Jeopardy and StarCraft. Backgammon is also a particularly interesting example that we'll discuss briefly. If you're interested MIT has run a great IAP tournaments in the past focusing on Poker and StarCraft. There used to be a substantial reward for solving Go. However, Seven Minutes in Heaven is beyond the scope of this course.
 
-\section{Game Playing}
+\section{Board 3}
 
-We will be treating game playing as a search problem using a similar abstract specification. However there are several additional elements that we need to include.
+History of Chess in AI
+1959 - John Mccarthy
+1997 IBM Deep Blue
+% Game playing is one of the earliest pursuits of AI researchers. John McCarthy's students were already working on chess in 1959. Research into Chess culminated in 1997 when IBM's Deep Blue beat Gary Kasparov, becoming the first computer program to defeat the reining grand champion. Today you can download programs that are world-class at Chess even on standard hardware. 
 
-\subsection{Game Model}
+\section{Board 4}
+Vocabulary: 
 
-Game playing (GP) differs from search in that we will assume there are two game players Min and Max. Also unlike search where there was a cost associated with each action, in game playing there is a single \textbf{utility} that is only given at \textbf{terminal} (end) states. The Min player is aiming to minimize utility and the Max player to maximize utility. We assume that the game is \textbf{zero-sum}, i.e. at any terminal state the utility for Min and Max sums to zero, and \textbf{perfect information}, i.e. both players see the full state of the game.
+
+\begin{itemize}
+\item  instead of minimizing cost, obtain \textbf{utility} 
+\item  Utility is only given at \textbf{terminal} states
+\item Assume games are \textbf{zero-sum}
+\item \textbf{partial information} \textbf{perfect information}, i.e. both players see state of the game. Partial: cards, stratego, starcraft, Perfect
+\item \textbf{deterministic} versus \textbf{stochastic}, i.e. both players see state of the game. cards, backgammon, etc. 
+\item \textbf{two-player} versus \textbf{multiplayer} chess, checkers versus, settlers, poker
+
+Min/ Max
+
+\end{itemize}
+
+Chess and go. 
+
+\section{Board 5}
+
 
  \air
 \begin{center}
@@ -63,18 +79,24 @@ Game playing (GP) differs from search in that we will assume there are two game 
   Name (AIMA) & Type & Description \\
   \midrule
 \\
- State space & $\mcS$ & All possible states of the game, e.g. unique board positions \\\\
- Action space & $\mcA$& All possible actions of the game i.e. moves\\\\
- Actions&  $\msc{Act}: \mcS \mapsto 2^\mcA$ & Actions are applicable at a given state, i.e. available moves. \\\\
+ State space & $\mcS$ & All states of the game, e.g. unique board positions \\\\
+ Action space & $\mcA$& All actions of the game i.e. moves\\\\
+ Actions&  $\msc{Act}: \mcS \mapsto 2^\mcA$ & Actions at state, i.e. available moves. \\\\
  Transition model&  $\msc{Res}:  \mcS \times \mcA \mapsto \mcS $ &  Update the state after a move.  \\\\
- Initial state &  $S_0 \in \mcS$ & The starting state of the game.  \\\\
+ Initial state &  $s_0 \in \mcS$ & The starting state of the game.  \\\\
  \midrule \\
- Player& $\msc{Player}: \mcS \rightarrow \{\mathrm{Min}, \mathrm{Max}\}$ & Function indicating the current turn. \\\\
- Terminal test& $\msc{Terminal}: \mcS \mapsto \{0, 1\} $ & Predicate indicating if this state is terminal, i.e. is the game over. \\\\
- Utility & $\msc{Utility}: \mcS \rightarrow \reals$ & The utility at a (terminal) state. \\\\
+ Player& $\msc{Player}: \mcS \rightarrow \{\mathrm{Min}, \mathrm{Max}\}$ &  The current turn. \\\\
+ Terminal test& $\msc{Terminal}: \mcS \mapsto \{0, 1\} $ &  Is the state is terminal, i.e. is the game over. \\\\
+ Utility & $\msc{Utility}: \mcS \rightarrow \reals$ & The utility (terminal) state. \\\\
  \bottomrule
 \end{tabularx}
 \end{center}
+
+We will be treating game playing as a search problem using a similar abstract specification. However there are several additional elements that we need to include.
+
+\subsection{Game Model}
+
+
 
 \subsection{Minimax}
 
@@ -202,7 +224,7 @@ Note though that for these problems we are only considering a branching factor o
 AIMA has a nice graphic showing a partial  expansion of a game tree for tic-tac-toe from scratch. 
 
 \begin{center}
-  \includegraphics{pics/tictactoe}
+  \includegraphics{../pics/tictactoe}
 \end{center}
 
 \section{Search for Game Playing}
@@ -377,12 +399,12 @@ Generally game playing heuristics estimate how good a position is for each playe
 Perhaps the simplest heuristic is the value system taught to beginners learning to play chess. This system simply assigns value to the \textbf{material remaining} on the board. 
 \air
 
-\centerline{\includegraphics[width=8cm]{pics/chessvalues1}}
+\centerline{\includegraphics[width=8cm]{../pics/chessvalues1}}
 \air
 
 However, note that because this is just an approximation and ignores so much of the other complications of chess, there have been many, many other heuristics for this problem. (Wikipedia is amazing.) I am not a chess player, but it is pretty remarkable to me that not even the relative values of bishop and knight are consistent.
 
-\centerline{ \includegraphics[width=16cm]{pics/chess_value}}
+\centerline{ \includegraphics[width=16cm]{../pics/chess_value}}
 \vspace{1cm}
 
 Another method that is used is brute force calculation of certain positions. In chess this often means utilizing an end-game solver to play out the results of a large set of standard positions (such as a kings and pawns ending) . Given that each extra depth is a multiplicative cost, having an endgame database can turn a failed search into a successful one.
