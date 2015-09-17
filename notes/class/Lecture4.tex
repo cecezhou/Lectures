@@ -1,5 +1,5 @@
 \documentclass[11pt]{article}
-\def\StudentVersion{}
+% \def\StudentVersion{}
 
 \usepackage{../../common}
 \title{Game Playing}
@@ -47,10 +47,36 @@ Show XKCD
 \section{Board 3}
 
 History of Chess in AI
-1959 - John Mccarthy
-1997 IBM Deep Blue
+\begin{itemize}
+\item 1948 - Alan Turing TuroChamp 
+\item 1949-1950 - Claude Shannon
+  (http://www.computerhistory.org/chess/full_record.php?iid=stl-430b9bbe92716)
+\item 1949 by Claude Shannon 
+\item 
+\item 1959 - John Mccarthy and students, Allen
+  Newell, Cliff Shaw, Herbert Simon (central AI figure)
+\item 1973 - Switch to Type-A (brute-force) systems Chess 4.0
+
+\item 1997 - IBM Deep Blue (8-12 depth, 200million moves)
+
+\item 2002 2006 - Commercially available (Deep Fritz) draws with Kramnick
+\item Junior - Search for interesting moves.
+
+\item Switch to Go. 
+\item Current: Centaur chess. 
+
+\end{itemize}
+
+ 
+
 % Game playing is one of the earliest pursuits of AI researchers. John McCarthy's students were already working on chess in 1959. Research into Chess culminated in 1997 when IBM's Deep Blue beat Gary Kasparov, becoming the first computer program to defeat the reining grand champion. Today you can download programs that are world-class at Chess even on standard hardware. 
 
+\begin{itemize}
+\item 6.176 - http://mitpokerbots.com/
+
+\item 6.370 - https://www.battlecode.org/
+
+\end{itemize}
 \section{Board 4}
 Vocabulary: 
 
@@ -63,7 +89,7 @@ Vocabulary:
 \item \textbf{deterministic} versus \textbf{stochastic}, i.e. both players see state of the game. cards, backgammon, etc. 
 \item \textbf{two-player} versus \textbf{multiplayer} chess, checkers versus, settlers, poker
 
-Min/ Max
+Min/ Max Two players 
 
 \end{itemize}
 
@@ -86,28 +112,48 @@ Chess and go.
  Initial state &  $s_0 \in \mcS$ & The starting state of the game.  \\\\
  \midrule \\
  Player& $\msc{Player}: \mcS \rightarrow \{\mathrm{Min}, \mathrm{Max}\}$ &  The current turn. \\\\
- Terminal test& $\msc{Terminal}: \mcS \mapsto \{0, 1\} $ &  Is the state is terminal, i.e. is the game over. \\\\
- Utility & $\msc{Utility}: \mcS \rightarrow \reals$ & The utility (terminal) state. \\\\
+ Term test& $\msc{Term}: \mcS \mapsto \{0, 1\} $ &  Is the state is terminal, i.e. is the game over. \\\\
+ Utility & $\msc{Utility}: \mcS \rightarrow \reals$ & The utility  of (terminal) state. \\\\
  \bottomrule
 \end{tabularx}
 \end{center}
 
 We will be treating game playing as a search problem using a similar abstract specification. However there are several additional elements that we need to include.
 
-\subsection{Game Model}
+Chess:
+
+Settlers of Catan: 
+
+Starcraft
+
+\section{Board 5}
+
+How do we treat a current state in the game? What will Utility be. 
 
 
+Assumption:  \textbf{Rationality}: Each agent acts simply to gain utility. 
 
-\subsection{Minimax}
 
 The key challenge of adversarial search is that the agent does not control the decisions of its opponent. Therefore to behave rationally i.e. to minimize or maximize utility, the agent must model its opponents decisions. 
 
 Generally we do this by assuming that the opponent will behave rationally as well, so if we are minimizing utility, we assume the opponent will act to maximize their utility. This leads to the Minimax formula for computing the utility of a nonterminal game state.
 
+\section{Board 6}
+
+\subsection{Game Model}
+
+Under a fully rational game 
+
 \[ \msc{Minimax}(s) = \begin{cases} 
-  \censorm{\msc{Utility}(s)} & \mathrm{if\ } \msc{Terminal}(s)  \\
+  \censorm{\msc{Utility}(s)} & \mathrm{if\ } \msc{Term}(s)  \\
   \censorm{\max_{a \in \msc{Act}(s)}  \msc{Minimax}(\msc{Res}(s, a))} & \mathrm{if\ } \msc{Player(s)} = \mathrm{Max}  \\
-  \censorm{\min_{a \in \msc{Act}(s) } \msc{Minimax}(\msc{Res}(s, a))} & \mathrm{if\ } \msc{Player(s)} = \mathrm{Min} \end{cases}\] 
+  \censorm{\min_{a \in \msc{Act}(s) } \msc{Minimax}(\msc{Res}(s, a))} & \mathrm{if\ } \msc{Player(s)} = \mathrm{Min} 
+
+\end{cases}\] 
+
+\section{Board 7}
+
+\textbf{Game Tree}
 
 We can expand this function into a data-structure known as a \textbf{game tree}. Each node in this tree represents a move by Max or Min. The triangles pointing up indicate that the node is maximizing over its children, and triangles pointing down indicate that the node is minimizing over its children.
 
@@ -119,12 +165,16 @@ We can expand this function into a data-structure known as a \textbf{game tree}.
   \end{tikzpicture}
 \end{center}
 
+\section{Board 8}
 
-
-\subsection{Example: Tic-Tac-Toe}
+\textbf{Tic-Tac-Toe}
+% \subsection{Example: Tic-Tac-Toe}
 
 Let's now consider one of the simplest zero-sum, perfect-information games, Tic-Tac-Toe. Consider the model for the following game state:
 
+Max: O
+
+Min: X
 
 \begin{center}  
 \begin{tabular}{c|c|c}
@@ -135,6 +185,9 @@ Let's now consider one of the simplest zero-sum, perfect-information games, Tic-
   X  & X & O
 \end{tabular}
 \end{center}
+
+
+\section{Board 9}
 
 \begin{exercise}
   What is the model state at this stage of tic-tac-toe?
@@ -148,7 +201,7 @@ Let's now consider one of the simplest zero-sum, perfect-information games, Tic-
 \\
  Actions&  \censor{$\msc{Act}(s)= \{$ OTop, OTopRight$\}$} & \censor{There are currently two actions available to play.} \\\\
  Player& \censor{$\msc{Player}(s) = \mathrm{Min}$} & \censor{We will assume that O is minimizing utility and it is her  turn to play.} \\\\
- Terminal test& \censor{$\msc{Terminal}(s) = 0 $} & \censor{This is not a terminal state. We have yet to win or draw} \\\\
+ Term test& \censor{$\msc{Term}(s) = 0 $} & \censor{This is not a terminal state. We have yet to win or draw} \\\\
  Utility & \censor{$\msc{Utility}$} & \censor{The utility function at a terminal state will be 1 for X, -1 for O, 0 for a draw.} \\\\
  \bottomrule
 \end{tabularx}
@@ -156,7 +209,8 @@ Let's now consider one of the simplest zero-sum, perfect-information games, Tic-
 
 Next we can ask what is the utility that the Min player should assign to this state. We can do this by expanding out the recursive \textsc{Minimax} definition. This gives: 
 
-
+\section{Board 9}
+ 
 \begin{eqnarray*} 
   \msc{Minimax}(s) = \min \{&& \max \{ \msc{Utility}(\msc{Res}( \msc{Res}(s, \mathrm{OTop})), \mathrm{XTopRight}) \}, \\
  & & \max \{ \msc{Utility}(\msc{Res}( \msc{Res}(s, \mathrm{OTopRight})), \mathrm{XTop}) \} \} 
@@ -182,6 +236,8 @@ Next we can ask what is the utility that the Min player should assign to this st
 \censor{}
 \vspace{5cm}
 } 
+
+\section{Board 10}
 
 Now let's consider a slightly more interesting position from X's perspective
 
@@ -227,30 +283,43 @@ AIMA has a nice graphic showing a partial  expansion of a game tree for tic-tac-
   \includegraphics{../pics/tictactoe}
 \end{center}
 
-\section{Search for Game Playing}
+\section{Board 11}
+% \section{Search for Game Playing}
 
-As with standard search, we have to decide how to 
-enumerate possible game states in order to find a path to take. We do this by implementing search over the Minimax game tree. 
+% As with standard search, we have to decide how to 
+% enumerate possible game states in order to find a path to take. We do this by implementing search over the Minimax game tree. 
+
+- Graph Search for games 
+
+- Depth-first search
+
+- Tree Search
 
 In particular, we utilize uninformed depth-first tree search where are terminal states are goal states. 
 \begin{exercise}
   Why do we not need to use graph search for games? Why not use uniform-cost search?
 \end{exercise}
 
-\censor{}
+- DFS with tree search has great memory efficiency.
 
+In this situation, DFS has clear advantages over BFS in terms of
+memory-efficiency. Because of the nature of game playing, we do not
+have to worry about maintaining the costly expand list.  
 
-In this situation, DFS has clear advantages over BFS in terms of memory-efficiency. Because of the nature of game playing, we do not have to worry about maintaining the costly expand list. 
-Note also that instead of explicitly using a stack, we can implement DFS using recursion. Each recursive call to \textsc{Minimax} simulates a pushing and popping from the stack. This leads to a very simple implementation of Minimax Search. 
-\air
 
 % The minimax algorithm can be seen as a special case of DFS. For a game with $m$ levels to the furthest terminal state it requires $O(b^m)$ steps to compute this function. Of course this is   
+\section{Board 12}
+Note also
+that instead of explicitly using a stack, we can implement DFS using
+recursion. Each recursive call to \textsc{Minimax} simulates a pushing
+and popping from the stack. This leads to a very simple implementation
+of Minimax Search.  \air
 
 \begin{algorithm}[h]
 \begin{algorithmic}[1]
   \Procedure{Minimax}{$s$}
 
-  \If{$\msc{Terminal}(s)$}
+  \If{$\msc{Term}(s)$}
   \Return{$\msc{Utility}(s)$}
   \ElsIf{$\msc{Player}(s) = \mathrm{Max}$}
   \State{$v \gets \censorm{-\infty}$}
@@ -271,6 +340,8 @@ Note also that instead of explicitly using a stack, we can implement DFS using r
 
 % \noindent The pseudo-code here is basically a direct implementation of the mathematical definition of \textsc{Minimax}. However, the recursive implementation means we search deeper before searching broader.
 
+\section{Board 13}
+
 \begin{exercise}
   What is the space and time complexity of this algorithm?
 \end{exercise}
@@ -284,15 +355,11 @@ Note also that instead of explicitly using a stack, we can implement DFS using r
   of $O(bm)$.}
 
 
+\section{Board 14}
+
 \subsection{Alpha-Beta Pruning}
 
 We can further speed up game-playing search by exploiting some properties about the game tree.  One nice property of the $\max$ ($\min$) operator, is that if we know after seeing $i$ elements of the set that known of the future elements will be greater (less) then it is not necessary to compute these values at all. We can therefore \textbf{short circuit} the computation and return.
-
-
-Consider the following example:
-
-\vspace{1cm}
-
 
   \begin{tikzpicture}[sibling distance = 2cm]
     \Tree [ .\node[utri]{};   
@@ -301,43 +368,63 @@ Consider the following example:
     ] ]  
   \end{tikzpicture}
 
-
-  \begin{exercise}
-    Go through this example and calculate the value of each state of the game tree top-down, left-to-right.
-    What is the minimax value of the top state?
-  \end{exercise}
-\censor{}
-
+\section{Board 15}
   \begin{exercise}
     If instead of $-1$ the utility was $-1000$, would anything change? What if instead $5$ was equal to $2$?
   \end{exercise}
-\censor{}
+
+
+% Consider the following example:
+
+% \vspace{1cm}
+
+
+
+%   \begin{exercise}
+%     Go through this example and calculate the value of each state of the game tree top-down, left-to-right.
+%     What is the minimax value of the top state?
+%   \end{exercise}
+% \censor{}
+
+% \censor{}
 
 What happened in this case was that the already computed value $5$ already dominated the value of $3$ in the min. Since $3$ is already lower than $5$ there is no need to keep on calculating the rest of the values. 
 
-\textbf{Alpha-beta pruning} exploits this idea to speed up Minimax computation without changing the final result. Formally this comes up when where there is a min embedded inside a max:
+\section{Board 15}
+
+\textbf{Alpha-beta pruning} speeds up minimax search while still given the exact result.. 
+
+
 
 \[ \max\{ \alpha, \ldots,  \min\{\ldots, v, \ldots, v' \} \}\]
   
-\noindent Let's say we have already computed the value of $\alpha$ and $v$, but are deciding whether to compute the rest of the min including $v'$. Consider the two cases:
+\noindent Computed the value of $\alpha$ and $v$, do we need to compute the rest of the min including $v'$. Consider the two cases:
 
 \begin{enumerate}
-\item  $v \geq \alpha$; the inner $\min$ may end with a value higher than $\alpha$ 
-\item  $v \leq \alpha$; the inner $\min$ will never affect the outer max, so calculating the value of $v'$ tells us no new information. 
+\item  $v > \alpha$; inner $\min$ may end with a value higher than $\alpha$ 
+\item  $v \leq \alpha$; inner $\min$ cannot change outer max,  value of $v'$ is uninformative. 
 \end{enumerate}
 
-In our examples the \textbf{alpha} value was $\alpha = 5$ and $v=3$. Since we are in the second case there is no need to keep calculating values.
+Examples the \textbf{alpha} value was $\alpha = 5$ and $v=3$. 
 
-We can generalize this idea to any of the outer max's:
+\textbf{Generalize}:
 
 \[ \max\{ \ldots, \alpha, \ldots, \min\{ \max\{\ldots \min\{\ldots, v, \ldots, v' \} \}\} , \ldots\}\]
 
-If there is a future value $v'$ with $v' \leq v$ it may be selected by the inner $\min$. However we know $v' < v \leq \alpha$ so it will not be selected by the outer $\max$. The bigger $\alpha$ we have, the more likely we can apply this pruning, so we maintain the largest $\alpha$ seen at ancestor $\max$ node. 
+If there is a future value $v'$ with $v' \leq v$ it may be selected by the inner $\min$. However we know $v' < v \leq \alpha$.
 
-We can also reverse this trick for $\min$ nodes by maintaining the smallest $\beta$ value:
+so it will not be selected by the outer $\max$. The bigger $\alpha$ we have, the more likely we can apply this pruning, so we maintain the largest $\alpha$ seen at ancestor $\max$ node. 
+
+% We can also reverse this trick for $\min$ nodes by maintaining the smallest $\beta$ value:
+
+\section{Board 16}
+
+\textbf{Reverse trick}
 
 \[ \censorm{\min\{ \ldots, \beta, \ldots, \max\{ \min\{\ldots \min\{\ldots, v, \ldots, v' \} \}\} , \ldots\} }\]
 
+
+\section{Board 17}
 The modified Minimax search algorithm is shown below.
 The upside of this method is that it yields a significant speed-up in practice with very minimal bookkeeping and no effect on the result. A rare combination.
 
@@ -347,9 +434,10 @@ The upside of this method is that it yields a significant speed-up in practice w
     $\beta$ is lowest value of ancestor min-node}
   \Procedure{AlphaBetaMinimax}{$s$, $\alpha$, $\beta$}
 
-  \If{$\msc{Terminal}(s) = 1$}
+  \If{$\msc{Term}(s) = 1$}
   \Return{$\msc{Utility}(s)$}
   \ElsIf{$\msc{Player}(s) = $ Max}
+  \State{$v \gets -\infty$}
   \State{$v \gets $\censor{}}
   \For{$a \in \msc{Act}(s)$}
   \State{$v \gets$ \censorm{$\max\{v, \msc{AlphaBetaMinimax}(\msc{Res}(s, a), \alpha, \beta)\}$}}
@@ -359,7 +447,7 @@ The upside of this method is that it yields a significant speed-up in practice w
   \State{$\alpha \gets \max\{\alpha, v\}$}
   \EndFor{}
   \ElsIf{$\msc{Player}(s) = $Min}
-  \State{$v \gets $\censor{}}
+  \State{$v \gets \infty$}
   \For{$a \in \msc{Act}(s)$}
   \State{$v \gets$ \censorm{$\min\{v, \msc{AlphaBetaMinimax}(\msc{Res}(s, a), \alpha, \beta)\}$}}
   
@@ -374,33 +462,56 @@ The upside of this method is that it yields a significant speed-up in practice w
 \end{algorithmic}
 \end{algorithm}
 
+Doesn't change complexity in the worst case, practically gives a 2x speed up. 
+
+ordering moves matters now!
+
+\section{Board 18}
+
+\textbf{Chess} 
+
+Average branching factor: 35
+
+Average depth: 40
+
+(apparently there was a 277 move game once)
 
 
-\subsection{Real-Time Decisions}
-
-While alpha-beta pruning does give a speed-up, most games are still much too large to compute \textsc{Minimax} in practice. Chess for instance has a average branching factor of 35 and an average depth of 40 (apparently there was a 277 move game once). Of course $O(35^{40})$ is cartoonishly large:
+$O(35^{40})$ is cartoonishly large (actually worse!) 
 
 \[ 57905761067641178540192733082440108773880638182163238525390625\] 
 
-In practice game playing systems use either a depth-limited search approach or an iterative deepening approach. For both, a depth limit is selected and search is cutoff at this depth. 
+\section{Board 19}
+
+Depth-limited scoring function
+
+Heuristic $h$
 
 \[ \msc{H-Minimax}(s, d) = \begin{cases} 
-  \msc{Utility}(s) & \mathrm{if\ } \msc{Terminal}(s)  \\
+  \msc{Utility}(s) & \mathrm{if\ } \msc{Term}(s)  \\
   h(s) & \mathrm{if\ } d > \mathrm{limit}   \\
   \max_{a \in \msc{Act}(s) } \msc{H-Minimax}(\msc{Res}(s, a), d+1) & \mathrm{if\ } \msc{Player(s)} = \mathrm{Max}  \\
   \min_{a \in \msc{Act}(s) } \msc{H-Minimax}(\msc{Res}(s, a), d+1) & \mathrm{if\ } \msc{Player(s)} = \mathrm{Min} \end{cases}\] 
 
-However, unlike in the standard search setup, GP only receives a score when it reaches a terminal state. To handle depth limited cases, we need a function $h: \mcS \mapsto \reals$ to award a heuristic utility to the state. As with general search, coming up with good game-specific heuristics is a very challenging problem but crucial to the construction of effective and practical GP agents.  
+No notion of admissable or consistent here. 
 
-\subsection{Heuristics}
+$h: \mcS \mapsto \reals$
 
-Generally game playing heuristics estimate how good a position is for each player. Note that unlike search heuristics we will not make any attempt to maintain admissibility or consistency here, although similar conditions do exist.
+\section{Board 20}
 
+Heuristics
 Perhaps the simplest heuristic is the value system taught to beginners learning to play chess. This system simply assigns value to the \textbf{material remaining} on the board. 
 \air
 
 \centerline{\includegraphics[width=8cm]{../pics/chessvalues1}}
 \air
+
+\section{Board 21}
+
+\subsection{Heuristics}
+
+Generally game playing heuristics estimate how good a position is for each player. Note that unlike search heuristics we will not make any attempt to maintain admissibility or consistency here, although similar conditions do exist.
+
 
 However, note that because this is just an approximation and ignores so much of the other complications of chess, there have been many, many other heuristics for this problem. (Wikipedia is amazing.) I am not a chess player, but it is pretty remarkable to me that not even the relative values of bishop and knight are consistent.
 
@@ -410,10 +521,28 @@ However, note that because this is just an approximation and ignores so much of 
 Another method that is used is brute force calculation of certain positions. In chess this often means utilizing an end-game solver to play out the results of a large set of standard positions (such as a kings and pawns ending) . Given that each extra depth is a multiplicative cost, having an endgame database can turn a failed search into a successful one.
 
 
+- LandmarkLowerBound(S,G) — StarCraft’s tech tree
+imposes many prerequisites on actions. These actions are
+known in the search literature as landmarks. Given this sequence
+of non-concurrent landmark actions, we sum the individual
+durations of actions not yet created to form an admissible
+lower bound for our search.
+
+- ResourceGoalBound(S,G) — Summing the total consumed
+resource cost of units in a goal gives us a lower bound
+on the resources required to construct the goal optimally.
+Performing a quick search to determine the makespan of
+producing only these resources is an admissible heuristic.
 
 
+Monte-carlo style- simulate out the remaining game
+
+Based on playouts. 
+
+\section{Board 22}
 
 \subsection{Expecti-Max}
+
 
 So far we have consider only deterministic games with perfect information. We will end by discussing games like Backgammon, which have perfect information but incorporates randomness. Each turn in backgammon consists of two steps:
 
@@ -422,6 +551,8 @@ So far we have consider only deterministic games with perfect information. We wi
 \item Select checkers to move based on dice values. 
 \end{itemize}
 
+
+\section{Board 23}
 Our focus will be on the question of how to model our opponent Min's action. Since we don't know what value they will roll, we could be pessimistic and assume that they get the best possible roll ($\min$ over rolls) or optimistic assume they get the worst possible roll ($\max$ over rolls). 
 
 
@@ -431,7 +562,7 @@ In the case of Backgammon, there are $36$ possible actions corresponding to each
 Once we explicitly incorporate the last roll into the state $s$, the moves of Max and Min become deterministic.  
 
 
-Why do we call this third player Exp? Well, similar to Max and Min, nodes in the game tree associated with Exp will take the \textbf{expectation} over children nodes. Define the expectation of a function $f$ with respect to a random variable $x$ as:
+\section{Board 23}
 
 \[\mathbb{E}_{x|y}[f(x)] = \sum_{x} p(x|y)f(x) \]
 
@@ -446,8 +577,10 @@ In the case of the utility of a state, this gives us a method for computing the 
 
 This formula can then be directly plugged into minimax, to yield an algorithm known as expectimax
 
+\section{Board 24}
+
 \[ \msc{E-Minimax}(s) = \begin{cases} 
-  \censorm{\msc{Utility}(s)} & \mathrm{if\ } \msc{Terminal}(s)  \\
+  \censorm{\msc{Utility}(s)} & \mathrm{if\ } \msc{Term}(s)  \\
   \censorm{\max_{a \in \msc{Act}(s) } \msc{E-Minimax}(\msc{Res}(s, a))} & \mathrm{if\ } \msc{Player(s)} = \mathrm{Max}  \\
   \censorm{\min_{a \in \msc{Act}(s) } \msc{E-Minimax}(\msc{Res}(s, a))} & \mathrm{if\ } \msc{Player(s)} = \mathrm{Min} \\ 
   \censorm{\sum_{a \in \msc{Act}(s) } p(a | s) \msc{E-Minimax}(\msc{Res}(s, a))} & \mathrm{if\ } \msc{Player(s)} = \mathrm{Exp} \end{cases}\] 

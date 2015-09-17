@@ -283,7 +283,7 @@ What happened in this case was that the already computed value $5$ already domin
 \noindent Let's say we have already computed the value of $\alpha$ and $v$, but are deciding whether to compute the rest of the min including $v'$. Consider the two cases:
 
 \begin{enumerate}
-\item  $v \geq \alpha$; the inner $\min$ may end with a value higher than $\alpha$ 
+\item  $v > \alpha$; the inner $\min$ may end with a value higher than $\alpha$ 
 \item  $v \leq \alpha$; the inner $\min$ will never affect the outer max, so calculating the value of $v'$ tells us no new information. 
 \end{enumerate}
 
