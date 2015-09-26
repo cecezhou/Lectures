@@ -8,6 +8,9 @@
 \def\LecTitle{Lectures Notes on Search}
 \def\LecDate{}
 
+\tikzstyle{utri}=[draw, regular polygon, regular polygon sides=3]
+\tikzstyle{dtri}=[utri, shape border rotate=180]
+
 \def\Graph{\path node(A)[draw, initial, state] at (-2, 1) {A};
     \path node(B)[draw, state] at (-1, 3) {B};
     \path node(C)[draw, state, accepting] at (4, 2) {C};
@@ -34,19 +37,16 @@
 
 \section{Board 0}
 
-Richard Karp
-
-Harvard Undergraduate 1955, Ph.D 1959, APplied math
-
-Turing paper 1950
-
-Won the Turing Award in 1985
-
-Among many other papers Held-Karp 1970
+\url{http://www.nytimes.com/2015/09/21/technology/personaltech/software-is-smart-enough-for-sat-but-still-far-from-intelligent.html?ref=topics&_r=0}
 
 \section{Board 1}
+\url{http://geometry.allenai.org/demo/}
+
+
+\section{Board 2}
 
 Travel(l)ing Salesman Problem
+
 
 \begin{center}
 \begin{tabularx}{\linewidth}{llX}
@@ -67,7 +67,49 @@ Canonical example of an NP-Hard Problem
 
 Tremendously important in all types of applications
 
-\section{Board 2}
+\section{Board 3}
+
+Traveling salesman problem
+
+Define ${\cal P}$ is a valid tour.
+
+\[ \min_{p \in {\cal P}} g(p) \] 
+
+Recall we want to find a underestimate of the cost.
+
+1. Write down constraints
+2. Relax Constraints
+3. Solve problem
+
+\section{Board 4}
+
+Richard Karp
+
+Harvard Undergraduate 1955, Ph.D 1959, APplied math
+
+Turing paper 1950
+
+Won the Turing Award in 1985
+
+Among many other papers Held-Karp 1970
+
+
+\section{Board 5}
+
+1. Constraint must enter and leave all nodes once
+
+2. Relax: Must enter all nodes once. (One-tree)
+  
+3. Solve: Minimum spanning tree algorithm. (polynomial time)
+
+Define ${\cal T}$ is a one-tree tour.
+
+\[ \min_{p \in {\cal T}} g(p) \leq \] 
+
+\[ \min_{p \in {\cal P}} g(p) \] 
+
+
+\section{Board 6}
 
 What is a heuristic for this problem 
 
@@ -79,10 +121,260 @@ Can calculate very fast (show example)
 
 Admissable. And you can show it is consistent.
 
-\section{Board 3}
+(generally this strategy always consistent heuristics)
+
+\section{Board 7}
 
 PacMan is TSP! 
 
+Translation is TSP.
+
+Heuristic is extremely effective. 255 expands!
+
+\section{Board 8}
+
+\begin{algorithm}[h]
+\begin{algorithmic}[1]
+  \Procedure{Minimax}{$s$, $d$}
+  \If{$d > l$}\Return{$h(s)$}
+  \If{$\msc{Term}(s)$}
+  \Return{$\msc{Utility}(s)$}
+  \ElsIf{$\msc{Player}(s) = \mathrm{Max}$}
+  \State{$v \gets \censorm{-\infty}$}
+  \For{$a \in \msc{Act}(s)$}
+  \State{\censor{$v \gets \max\{v, \msc{Minimax}(\msc{Res}(s, a), d+1)\}$}}
+  \EndFor{}
+  \ElsIf{$\msc{Player}(s) = \mathrm{Min}$}
+  \State{$v \gets \censorm{\infty}$}
+  \For{$a \in \msc{Act}(s)$}
+  \State{\censor{$v \gets \min\{v, \msc{Minimax}(\msc{Res}(s, a), d + 1)\}$}}
+  \EndFor{}
+  \EndIf{}
+  \State{\Return{$v$}}
+  \EndProcedure{}
+\end{algorithmic}
+\end{algorithm}
+
+
+\section{Board 9}
+
+Heuristic: connect 4
+
+\begin{itemize}
+\item Number of threats
+\item longest goal
+\item Unblocked two's
+\end{itemize}
+
+\section{Board 10}
+
+- LandmarkLowerBound(S,G) — StarCraft’s tech tree
+imposes many prerequisites on actions. These actions are
+known in the search literature as landmarks. Given this sequence
+of non-concurrent landmark actions, we sum the individual
+durations of actions not yet created to form an admissible
+lower bound for our search.
+
+- ResourceGoalBound(S,G) — Summing the total consumed
+resource cost of units in a goal gives us a lower bound
+on the resources required to construct the goal optimally.
+Performing a quick search to determine the makespan of
+producing only these resources is an admissible heuristic.
+
+\section{Board 11}
+
+Monte-carlo style- simulate out the remaining game
+
+Based on playouts. 
+
+
+\section{Board 11}
+
+\subsection{Alpha-Beta Pruning}
+
+We can further speed up game-playing search by exploiting some properties about the game tree.  One nice property of the $\max$ ($\min$) operator, is that if we know after seeing $i$ elements of the set that known of the future elements will be greater (less) then it is not necessary to compute these values at all. We can therefore \textbf{short circuit} the computation and return.
+
+  \begin{tikzpicture}[sibling distance = 2cm]
+    \Tree [ .\node[utri]{};   
+    [ .\node[dtri]{};  [  .\node[utri]{}; 5    ]   [ .\node[utri]{};  10 ] ]  
+    [ .\node[dtri]{};   [ .\node[utri]{}; 3 ]  [ .\node[utri]{}; 12 ]     [ .\node[utri]{}; -1 ]  [ .\node[utri]{}; 1 ]
+    ] ]  
+  \end{tikzpicture}
+
+\section{Board 12}
+  \begin{exercise}
+    If instead of $-1$ the utility was $-1000$, would anything change? What if instead $5$ was equal to $2$?
+  \end{exercise}
+
+
+% Consider the following example:
+
+% \vspace{1cm}
+
+
+
+%   \begin{exercise}
+%     Go through this example and calculate the value of each state of the game tree top-down, left-to-right.
+%     What is the minimax value of the top state?
+%   \end{exercise}
+% \censor{}
+
+% \censor{}
+
+What happened in this case was that the already computed value $5$ already dominated the value of $3$ in the min. Since $3$ is already lower than $5$ there is no need to keep on calculating the rest of the values. 
+
+\section{Board 13}
+
+\textbf{Alpha-beta pruning} 
+
+- speeds up minimax search
+- still exact.
+
+\[ \max\{ \alpha, \ldots,  \min\{\ldots, v, \ldots, v' \} \}\]
+  
+\noindent Comput the value of $\alpha$ and $v$, do we need $v'$. Consider the two cases:
+
+\begin{enumerate}
+\item  $v > \alpha$;  $\min$ may find value higher than $\alpha$ 
+\item  $v \leq \alpha$;  $\min$ cannot change max,  $v'$ is \textit{uninformative}. 
+\end{enumerate}
+
+Examples the \textbf{alpha} value was $\alpha = 5$ and $v=3$. 
+
+\textbf{Generalize}:
+
+\[ \max\{ \ldots, \alpha, \ldots, \min\{ \max\{\ldots \min\{\ldots, v, \ldots, v' \} \}\} , \ldots\}\]
+
+If there is a future value $v'$ with $v' \leq v$ it may be selected by the inner $\min$. However we know $v' < v \leq \alpha$.
+
+Therefore not selected by outer $\max$. 
+
+Store all $\alpha$'s? 
+
+The bigger $\alpha$ the better,
+
+Idea: maintain the largest $\alpha$ seen at ancestor $\max$ node. 
+
+% 
+
+\section{Board 14}
+
+\textbf{Reverse trick}
+
+
+
+\[ \censorm{\min\{ \ldots, \beta, \ldots, \max\{ \min\{\ldots \max\{\ldots, v, \ldots, v' \} \}\} , \ldots\} }\]
+
+
+\begin{enumerate}
+\item  $v < \beta$;  $\max$ may find value higher than $\beta$ 
+\item  $v \geq \beta$;  $\max$ cannot change min,  $v'$ is \textit{uninformative}. 
+\end{enumerate}
+
+
+\section{Board 15}
+The modified Minimax search algorithm is shown below.
+The upside of this method is that it yields a significant speed-up in practice with very minimal bookkeeping and no effect on the result. A rare combination.
+
+\begin{algorithm}
+\begin{algorithmic}[1]
+  \Require{$\alpha$ is highest value of ancestor max-node, 
+    $\beta$ is lowest value of ancestor min-node}
+  \Procedure{AlphaBetaMinimax}{$s$, $\alpha$, $\beta$}
+
+  \If{$\msc{Term}(s) = 1$}
+  \Return{$\msc{Utility}(s)$}
+  \ElsIf{$\msc{Player}(s) = $ Max}
+  \State{$v \gets -\infty$}
+  \State{$v \gets $\censor{}}
+  \For{$a \in \msc{Act}(s)$}
+  \State{$v \gets$ \censorm{$\max\{v, \msc{AlphaBetaMinimax}(\msc{Res}(s, a), \alpha, \beta)\}$}}
+  \If{$v \geq \beta$}
+  \Return{$v$}
+  \EndIf{}
+  \State{$\alpha \gets \max\{\alpha, v\}$}
+  \EndFor{}
+  \ElsIf{$\msc{Player}(s) = $Min}
+  \State{$v \gets \infty$}
+  \For{$a \in \msc{Act}(s)$}
+  \State{$v \gets$ \censorm{$\min\{v, \msc{AlphaBetaMinimax}(\msc{Res}(s, a), \alpha, \beta)\}$}}
+  
+  \If{\censorm{$v \leq \alpha$}}
+  \Return{$v$}
+  \EndIf{}
+  \State{\censorm{$\beta \gets \min\{\beta, v\}$}}
+  \EndFor{}
+  \EndIf{}
+  \State{\Return{$v$}}
+  \EndProcedure{}
+\end{algorithmic}
+\end{algorithm}
+
+Doesn't change complexity in the worst case, practically gives a 2x speed up. 
+
+Ordering moves matters now!
+
+
+\section{Board 17}
+
+\subsection{Expecti-Max}
+
+Deterministic games versus stochastic games 
+
+Randomness
+
+Ex: backgammon
+
+\begin{itemize}
+\item Roll two dies
+\item Select checkers to move based on dice values. 
+\end{itemize}
+
+
+\section{Board 18}
+How to model opponent?
+
+-pessimistic?  assume that they get the best possible roll ($\min$ over rolls) 
+-optimistic? assume they get the worst possible roll ($\max$ over rolls). 
+
+- Expectation? weight all possibilities by prob.
+
+
+\section{Board 19}
+$P(a | s)$.
+
+% Instead, we will directly model the randomness of the roll. We treat the dice roll as a third play Exp and the value of the dice as an action $a$. Given the state of the world $s$, we say the probability of Exp taking action $a$ is given as $P(a | s)$. 
+
+In the case of Backgammon, there are $36$ possible actions corresponding to each pair of dice rolls, each with probability $\frac{1}{36}$. The turn order then alternates: Exp, Min, Exp, Max, Exp, Min, ...
+Once we explicitly incorporate the last roll into the state $s$, the moves of Max and Min become deterministic.  
+
+
+\section{Board 19}
+
+\[\mathbb{E}_{x|y}[f(x)] = \sum_{x} p(x|y)f(x) \]
+
+In the case of the utility of a state, this gives us a method for computing the expected utility of an Exp state.
+
+% In other games the randomness may take various other forms. 
+
+
+% consider the case of a game with randomness. We model randomness as a third player Exp. Assume that at random states there is a probability distribution $p(a | s)$ of selecting an action $a$. Define expectation of 
+
+\[ \mathbb{E}_{a|s}[\msc{Utility}(\msc{Res}(s, a))]= \sum_{a \in \msc{Act}(s) } p(a | s) \msc{Utility}(\msc{Res}(s, a))  \]  
+
+This formula can then be directly plugged into minimax, to yield an algorithm known as expectimax
+
+\section{Board 20}
+
+\[ \msc{E-Minimax}(s) = \begin{cases} 
+  \censorm{\msc{Utility}(s)} & \mathrm{if\ } \msc{Term}(s)  \\
+  \censorm{\max_{a \in \msc{Act}(s) } \msc{E-Minimax}(\msc{Res}(s, a))} & \mathrm{if\ } \msc{Player(s)} = \mathrm{Max}  \\
+  \censorm{\min_{a \in \msc{Act}(s) } \msc{E-Minimax}(\msc{Res}(s, a))} & \mathrm{if\ } \msc{Player(s)} = \mathrm{Min} \\ 
+  \censorm{\sum_{a \in \msc{Act}(s) } p(a | s) \msc{E-Minimax}(\msc{Res}(s, a))} & \mathrm{if\ } \msc{Player(s)} = \mathrm{Exp} \end{cases}\] 
+
+\section{Groups}
+
+Break up.
 
 % \section{Board 4}
 
