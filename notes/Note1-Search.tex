@@ -457,7 +457,7 @@ from looping. This modification leads to an algorithm called graph search:
   \State{\censor{explored $\gets \{s\} \cup$ explored}}
   \For{$a \in \msc{Actions}(s)$}
   \State{$s' \gets \msc{Result}(s, a)$}
-  \If{\censor{$s \not \in$ explored }}
+  \If{\censor{$s' \not \in$ explored }}
   frontier.push($p$ extended by $(s,a)$)
   \EndIf{}
   \EndFor{}
